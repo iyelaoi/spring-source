@@ -172,10 +172,12 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 				Node node = nl.item(i);
 				if (node instanceof Element) {
 					Element ele = (Element) node;
+					// xml中的标签是不是默认的名称空间，如 <bean> 是默认名称空间的
 					if (delegate.isDefaultNamespace(ele)) {
 						parseDefaultElement(ele, delegate);
 					}
 					else {
+						//如<aop:config>不是默认命名空间的
 						delegate.parseCustomElement(ele);
 					}
 				}
