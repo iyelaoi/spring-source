@@ -1347,6 +1347,9 @@ public class BeanDefinitionParserDelegate {
 		return TRUE_VALUE.equals(value);
 	}
 
+	/**
+	 * 对非默认名称空间的标签元素进行特殊处理
+	 */
 	@Nullable
 	public BeanDefinition parseCustomElement(Element ele) {
 		return parseCustomElement(ele, null);
@@ -1354,15 +1357,21 @@ public class BeanDefinitionParserDelegate {
 
 	@Nullable
 	public BeanDefinition parseCustomElement(Element ele, @Nullable BeanDefinition containingBd) {
+		// 从<aop:config>这个Node（参数Element是Node接口的子接口）中拿到Namespace="http://www.springframework.org/schema/aop"
 		String namespaceUri = getNamespaceURI(ele);
 		if (namespaceUri == null) {
 			return null;
 		}
+
+		// 根据这个Namespace获取对应的NamespaceHandler即Namespace处理器
+		// 具体到aop这个Namespace的NamespaceHandler是org.springframework.aop.config.AopNamespaceHandler类
 		NamespaceHandler handler = this.readerContext.getNamespaceHandlerResolver().resolve(namespaceUri);
 		if (handler == null) {
 			error("Unable to locate Spring NamespaceHandler for XML schema namespace [" + namespaceUri + "]", ele);
 			return null;
 		}
+
+		// 利用AopNamespaceHandler的parse方法，解析<aop:config>下的内容
 		return handler.parse(ele, new ParserContext(this.readerContext, this, containingBd));
 	}
 

@@ -70,7 +70,13 @@ public abstract class NamespaceHandlerSupport implements NamespaceHandler {
 	@Override
 	@Nullable
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
+		// 首先获取具体的Parser，因为当前节点是<aop:config>，
+		// config是通过ConfigBeanDefinitionParser来处理的，
+		// 因此findParserForElement(element, parserContext)
+		// 这一部分代码获取到的是ConfigBeanDefinitionParser
 		BeanDefinitionParser parser = findParserForElement(element, parserContext);
+
+		// ConfigBeanDefinitionParser的parse方法
 		return (parser != null ? parser.parse(element, parserContext) : null);
 	}
 

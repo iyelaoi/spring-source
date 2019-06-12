@@ -67,12 +67,15 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 		this.advisorRetrievalHelper = new BeanFactoryAdvisorRetrievalHelperAdapter(beanFactory);
 	}
 
-
+	/**
+	 * 首先我们要思考的第一个问题是：哪些目标对象需要生成代理？因为配置文件里面有很多Bean，
+	 * 肯定不能对每个Bean都生成代理，因此需要一套规则判断Bean是不是需要生成代理：
+	 */
 	@Override
 	@Nullable
 	protected Object[] getAdvicesAndAdvisorsForBean(
 			Class<?> beanClass, String beanName, @Nullable TargetSource targetSource) {
-
+		// 指定class寻找合适的Advisor
 		List<Advisor> advisors = findEligibleAdvisors(beanClass, beanName);
 		if (advisors.isEmpty()) {
 			return DO_NOT_PROXY;
@@ -91,8 +94,13 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 	 * @see #extendAdvisors
 	 */
 	protected List<Advisor> findEligibleAdvisors(Class<?> beanClass, String beanName) {
+		// 寻找候选Advisors，根据上文的配置文件，有两个候选Advisor，
+		// 分别是<aop:aspect>节点下的<aop:before>和<aop:after>这两个，
+		// 这两个在XML解析的时候已经被转换生成了RootBeanDefinition
 		List<Advisor> candidateAdvisors = findCandidateAdvisors();
+		// 根据候选Advisors，寻找可以使用的Advisor
 		List<Advisor> eligibleAdvisors = findAdvisorsThatCanApply(candidateAdvisors, beanClass, beanName);
+		// 向候选Advisor链的开头（也就是List.get(0)的位置）添加一个org.springframework.aop.support.DefaultPointcutAdvisor
 		extendAdvisors(eligibleAdvisors);
 		if (!eligibleAdvisors.isEmpty()) {
 			eligibleAdvisors = sortAdvisors(eligibleAdvisors);
