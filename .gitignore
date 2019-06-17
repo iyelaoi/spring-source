@@ -38,3 +38,10 @@ out
 test-output
 atlassian-ide-plugin.xml
 .gradletasknamecache
+
+# source insight file
+spring-source.si4project/
+*.sisc
+
+*.sip_sym
+*.siwork

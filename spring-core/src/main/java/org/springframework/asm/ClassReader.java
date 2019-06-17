@@ -300,16 +300,23 @@ public class ClassReader {
       throw new IOException("Class not found");
     }
     try {
-      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+	  //创建缓冲流
+      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+	  // 每次读取4096个字节
       byte[] data = new byte[INPUT_STREAM_DATA_CHUNK_SIZE];
       int bytesRead;
       while ((bytesRead = inputStream.read(data, 0, data.length)) != -1) {
-        outputStream.write(data, 0, bytesRead);
+	  	// 每次读取后，写入缓冲流
+        outputStream.write(data, 0, bytesRead); 
       }
+	  // 写入刷新
       outputStream.flush();
+	  // 返回类的字节数组
       return outputStream.toByteArray();
     } finally {
       if (close) {
+	  	// 关闭流
         inputStream.close();
       }
     }

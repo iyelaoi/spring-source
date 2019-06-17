@@ -97,9 +97,15 @@ public class SimpleMetadataReaderFactory implements MetadataReaderFactory {
 			throw ex;
 		}
 	}
+	
 
+	/**
+	 * 获取类元数据读取器
+	 */
 	@Override
 	public MetadataReader getMetadataReader(Resource resource) throws IOException {
+
+		// 创建简单类元数据读取器
 		return new SimpleMetadataReader(resource, this.resourceLoader.getClassLoader());
 	}
 
