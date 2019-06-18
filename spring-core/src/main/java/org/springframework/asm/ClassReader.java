@@ -167,6 +167,7 @@ public class ClassReader {
   }
 
   /**
+   * 根据字节码数组创建ClassReader对象，此构造函数不能暴漏为 public
    * Constructs a new {@link ClassReader} object. <i>This internal constructor must not be exposed
    * as a public API</i>.
    *
@@ -176,17 +177,23 @@ public class ClassReader {
    */
   ClassReader(
       final byte[] classFileBuffer, final int classFileOffset, final boolean checkClassVersion) {
-    b = classFileBuffer;
+    b = classFileBuffer; //
     // Check the class' major_version. This field is after the magic and minor_version fields, which
-    // use 4 and 2 bytes respectively.
+    // use 4 and 2 bytes respectively.（witch 代指之前的字节码中已经使用的字节数, 英文句型）
+    // 如 4 表示magic， 2 表示 minor_version
+    // 两个字节版本
     if (checkClassVersion && readShort(classFileOffset + 6) > Opcodes.V12) {
       throw new IllegalArgumentException(
           "Unsupported class file major version " + readShort(classFileOffset + 6));
     }
     // Create the constant pool arrays. The constant_pool_count field is after the magic,
     // minor_version and major_version fields, which use 4, 2 and 2 bytes respectively.
+    // 创建常量池
+    // 读取常量池数量
     int constantPoolCount = readUnsignedShort(classFileOffset + 8);
-    cpInfoOffsets = new int[constantPoolCount];//常量池数组
+
+	//初始化常量池数组
+    cpInfoOffsets = new int[constantPoolCount]; //常量池数组
     constantUtf8Values = new String[constantPoolCount];
     // Compute the offset of each constant pool entry, as well as a conservative estimate of the
     // maximum length of the constant pool strings. The first constant pool entry is after the
