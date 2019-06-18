@@ -55,6 +55,7 @@ final class SimpleMetadataReader implements MetadataReader {
 		ClassReader classReader;
 		try {
 			// 使用类元流初始化ClassReader
+			// 此初始化中进行了字节码常量池的处理
 			classReader = new ClassReader(is);
 		}
 		catch (IllegalArgumentException ex) {
@@ -65,7 +66,11 @@ final class SimpleMetadataReader implements MetadataReader {
 			is.close();
 		}
 
+		// 初始化Visitor，仅初始化classloder属性，基本的asm vistor使用方式
 		AnnotationMetadataReadingVisitor visitor = new AnnotationMetadataReadingVisitor(classLoader);
+
+		// asm 的 classReader 的 accept,传入上面的 vistor 
+		// ClassReader.SKIP_DEBUG 不进行某些序列的审察
 		classReader.accept(visitor, ClassReader.SKIP_DEBUG);
 
 		this.annotationMetadata = visitor;

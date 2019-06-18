@@ -37,6 +37,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 /**
+ * 注解访问器
  * ASM class visitor which looks for the class name and implemented types as
  * well as for the annotations defined on the class, exposing them through
  * the {@link org.springframework.core.type.AnnotationMetadata} interface.
@@ -67,6 +68,9 @@ public class AnnotationMetadataReadingVisitor extends ClassMetadataReadingVisito
 	protected final Set<MethodMetadata> methodMetadataSet = new LinkedHashSet<>(4);
 
 
+	/**
+	 * 构造器
+	 */
 	public AnnotationMetadataReadingVisitor(@Nullable ClassLoader classLoader) {
 		this.classLoader = classLoader;
 	}

@@ -192,7 +192,7 @@ public class ClassReader {
     // 读取常量池数量
     int constantPoolCount = readUnsignedShort(classFileOffset + 8);
 
-	//初始化常量池数组
+	//初始化常量池数组：其中每个值
     cpInfoOffsets = new int[constantPoolCount]; //常量池数组
     constantUtf8Values = new String[constantPoolCount];
     // Compute the offset of each constant pool entry, as well as a conservative estimate of the
